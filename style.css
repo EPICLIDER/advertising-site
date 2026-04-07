@@ -1,0 +1,187 @@
+/* Custom Properties */
+:root {
+    --accent-glow: #ff0000;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+}
+
+/* Glassmorphism Effect */
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Text Gradient */
+.text-gradient {
+    background: linear-gradient(to bottom, #ffffff 30%, #444444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Custom Cursor */
+#custom-cursor {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    mix-blend-mode: difference;
+    transition: transform 0.1s ease-out;
+}
+
+/* Main Hero Glow */
+.product-glow {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    opacity: 0.25;
+    filter: blur(80px);
+    z-index: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 3D Can Styling */
+.can-body {
+    position: relative;
+    z-index: 10;
+    width: 280px;
+    height: 520px;
+    background: linear-gradient(to bottom, #ef4444, #7f1d1d); /* Default Red */
+    border-radius: 3rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3rem 0;
+}
+
+.can-brand-text {
+    font-size: 3.5rem;
+    font-weight: 900;
+    transform: rotate(90deg);
+    opacity: 0.15;
+    letter-spacing: 0.5rem;
+    margin-top: 4rem;
+}
+
+.can-label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+}
+
+.pulse-ring {
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Swatches */
+.swatch {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border 0.3s;
+}
+
+.swatch:hover { transform: scale(1.3); }
+.swatch.active { border-color: white; transform: scale(1.2); }
+
+/* Buttons */
+.cta-primary {
+    background: white;
+    color: black;
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: 800;
+    transition: all 0.3s;
+}
+
+.cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255,255,255,0.2);
+}
+
+.cta-secondary {
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: 800;
+    backdrop-filter: blur(10px);
+}
+
+/* Feature Cards */
+.feature-card {
+    padding: 3rem;
+    border-radius: 2.5rem;
+    transition: transform 0.4s;
+}
+
+.feature-card:hover { transform: translateY(-10px); }
+
+/* Product Grid Cards */
+.flavor-card {
+    padding: 1.5rem;
+    border-radius: 2rem;
+    text-align: center;
+}
+
+.card-image-wrap {
+    height: 250px;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.mock-can {
+    width: 60px;
+    height: 140px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.buy-btn {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    padding: 0.8rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    transition: background 0.3s;
+}
+
+.flavor-card:hover .buy-btn {
+    background: white;
+    color: black;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.1; transform: scale(1.1); }
+}
+
+.pulse-slow { animation: pulse-slow 5s infinite; }
