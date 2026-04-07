@@ -1,139 +1,132 @@
-// Initialize UI Icons
+// Initialize Lucide Icons
 lucide.createIcons();
 
-// Register GSAP Plugins
-gsap.registerPlugin(ScrollTrigger);
-
-/**
- * MOUSE CURSOR LOGIC
- */
-const cursor = document.getElementById('custom-cursor');
+// Custom Cursor Movement
+const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', (e) => {
-    gsap.to(cursor, {
-        x: e.clientX - 10,
-        y: e.clientY - 10,
-        duration: 0.1,
-        ease: "power2.out"
-    });
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
 });
 
-/**
- * FLAVOR DATA OBJECT
- */
-const flavorData = {
+// GSAP Scroll Animations
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero Floating Animation
+gsap.to("#hero-can", {
+    y: 30,
+    duration: 2,
+    repeat: -1,
+    yoyo: true,
+    ease: "power1.inOut"
+});
+
+gsap.to("#hero-can", {
+    rotation: 5,
+    duration: 3,
+    repeat: -1,
+    yoyo: true,
+    ease: "sine.inOut"
+});
+
+// Reveal on Scroll
+gsap.from(".hero-title", {
+    opacity: 0,
+    y: 100,
+    duration: 1,
+    ease: "power4.out"
+});
+
+gsap.from(".product-card", {
+    scrollTrigger: {
+        trigger: "#shop",
+        start: "top 80%"
+    },
+    opacity: 0,
+    y: 50,
+    stagger: 0.2,
+    duration: 1
+});
+
+// Flavor Switcher Data
+const flavors = {
     classic: {
-        name: "CRIMSON",
-        label: "Classic",
-        colors: ["#ef4444", "#7f1d1d"],
-        glow: "#ff0000"
+        name: "Classic",
+        desc: "The original bold spark. Perfectly balanced carbonation for the ultimate refresh.",
+        color: "#ff2d2d",
+        bg: "#ff2d2d"
     },
-    zero: {
-        name: "MIDNIGHT",
-        label: "Zero Sugar",
-        colors: ["#3f3f46", "#09090b"],
-        glow: "#ffffff"
+    lemon: {
+        name: "Lemon Zest",
+        desc: "A sharp, citrusy explosion that wakes up your senses. Tangy and electric.",
+        color: "#facc15",
+        bg: "#eab308"
     },
-    blue: {
-        name: "ELECTRIC",
-        label: "Blue Razz",
-        colors: ["#3b82f6", "#1e3a8a"],
-        glow: "#0066ff"
+    berry: {
+        name: "Berry Blast",
+        desc: "Deep forest berries crushed into a fizzy masterpiece. Sweet, dark, and bold.",
+        color: "#a855f7",
+        bg: "#9333ea"
     },
-    mango: {
-        name: "TROPIC",
-        label: "Mango Bolt",
-        colors: ["#f97316", "#7c2d12"],
-        glow: "#ff9900"
+    mint: {
+        name: "Mint Fresh",
+        desc: "Cooling menthol meets high-fizz refreshment. The ultimate chill-out drink.",
+        color: "#22c55e",
+        bg: "#16a34a"
     }
 };
 
-/**
- * SWITCH FLAVOR FUNCTION
- * Updates the theme, product colors, and text with GSAP
- */
-function switchFlavor(key) {
-    const data = flavorData[key];
+function updateFlavor(key) {
+    const data = flavors[key];
     
-    // Update Swatch Active State
-    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-    event.target.classList.add('active');
-
-    // 1. Animate Can Background
-    gsap.to("#main-can", {
-        background: `linear-gradient(to bottom, ${data.colors[0]}, ${data.colors[1]})`,
-        duration: 0.6,
-        ease: "power2.inOut"
+    // Update Buttons
+    document.querySelectorAll('.flavor-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.innerText.toLowerCase() === key) btn.classList.add('active');
     });
 
-    // 2. Animate Background Glow
-    gsap.to("#main-glow", {
-        "--accent-glow": data.glow,
-        duration: 1
+    // Update Hero Section Background
+    gsap.to("#hero", { backgroundColor: data.bg, duration: 0.8 });
+
+    // Update Can Visuals
+    const heroCan = document.getElementById('hero-can');
+    const previewCan = document.getElementById('preview-can');
+    const flavorLabel = document.getElementById('hero-flavor-label');
+
+    // Simple swap classes for the CSS Can
+    [heroCan, previewCan].forEach(can => {
+        can.className = `can-visual ${key} ${can.id === 'preview-can' ? 'scale-75' : ''}`;
     });
 
-    // 3. Update Text Content with Fade Effect
-    const title = document.getElementById('flavor-title');
-    const label = document.getElementById('can-label');
-
-    gsap.timeline()
-        .to([title, label], { opacity: 0, y: 10, duration: 0.2 })
-        .call(() => {
-            title.innerText = data.name;
-            label.innerText = data.label;
-        })
-        .to([title, label], { opacity: 1, y: 0, duration: 0.4, ease: "back.out" });
-
-    // 4. Subtle Can "Pop" Animation
-    gsap.fromTo("#main-can", { scale: 0.95 }, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.3)" });
+    // Animate Text Update
+    gsap.to(["#flavor-name", "#flavor-desc", flavorLabel], {
+        opacity: 0,
+        x: -20,
+        duration: 0.3,
+        onComplete: () => {
+            document.getElementById('flavor-name').innerText = data.name;
+            document.getElementById('flavor-name').style.color = data.color;
+            document.getElementById('flavor-desc').innerText = data.desc;
+            flavorLabel.innerText = key.toUpperCase();
+            
+            gsap.to(["#flavor-name", "#flavor-desc", flavorLabel], {
+                opacity: 1,
+                x: 0,
+                duration: 0.3
+            });
+        }
+    });
 }
 
-/**
- * INITIAL LOAD ANIMATIONS
- */
-window.addEventListener('load', () => {
-    const tl = gsap.timeline();
-
-    tl.from("nav", { y: -100, opacity: 0, duration: 1, ease: "power4.out" })
-      .from("#hero-text h1", { x: -100, opacity: 0, duration: 1, ease: "power4.out" }, "-=0.5")
-      .from("#hero-text p", { opacity: 0, duration: 0.8 }, "-=0.5")
-      .from(".can-wrap", { scale: 0, rotate: -20, opacity: 0, duration: 1.2, ease: "elastic.out(1, 0.5)" }, "-=1");
-
-    // Continuous Floating Animation
-    gsap.to("#main-can", {
-        y: -15,
-        rotate: 1,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-    });
-});
-
-/**
- * SCROLL REVEAL ANIMATIONS
- */
-gsap.utils.toArray('.feature-card').forEach((card, i) => {
-    gsap.from(card, {
-        scrollTrigger: {
-            trigger: card,
-            start: "top 90%",
-        },
-        opacity: 0,
-        y: 60,
-        duration: 0.8,
-        delay: i * 0.15,
-        ease: "power2.out"
-    });
-});
-
-gsap.from(".flavor-card", {
-    scrollTrigger: {
-        trigger: "#flavors",
-        start: "top 70%",
-    },
-    y: 50,
-    opacity: 0,
-    stagger: 0.1,
-    duration: 1,
-    ease: "power3.out"
-});
+// Simple Cart Logic
+let cartCount = 0;
+function addToCart() {
+    cartCount++;
+    const badge = document.getElementById('cart-count');
+    badge.innerText = cartCount;
+    
+    // Tiny bounce animation
+    gsap.fromTo("#cart-icon", { scale: 0.8 }, { scale: 1, duration: 0.3, ease: "back.out" });
+    
+    // Magnetic effect or feedback could be added here
+    alert("Added to cart! Let's FizzUp!");
+}
